@@ -9,7 +9,7 @@ def determineCoordinates(adress):
     lat = response.json()["result"]["items"][0]["point"]["lat"]
     return [lat, lon]
 def PublicTransport(url, start, end):
-    
+
     start_lat, start_lon = determineCoordinates(start)
     end_lat, end_lon = determineCoordinates(end)
     d = {
@@ -39,3 +39,20 @@ def PublicTransport(url, start, end):
     }
     resp = requests.post(url, json=d, headers=headers)
     return resp.json()
+
+
+def getSight(x, y):
+    url = settings.getSights + f"q=Достопримечательность&sort_point={x},{y}&key={settings.token}"
+    try:
+        response = requests.get(url)
+        return response.json()
+    except requests.exceptions.InvalidSchema:
+        return {"status": "400"}
+
+
+def getRoute(args, way="multimodal"):
+    url = f"https://2gis.ru/directions/points/"
+    for val in args:
+        url += f"{val[0]}%2C{val[1]}%3B{val[2]}" + "%7C"
+    return url
+print(PublicTransport(settings.gis_url))

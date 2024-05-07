@@ -1,3 +1,4 @@
-key = "d6eac903-d3d2-45f0-8345-981f03a9c39a"
-gis_public_transport_url = f"https://routing.api.2gis.com/public_transport/2.0?key={key}"
-geocoder_url = f"https://catalog.api.2gis.com/3.0/items/geocode?q=&fields=items.point&key={key}"
+token = "e54ece61-706e-4274-9daa-51a572cf8c7c"
+
+gis_url = f"https://routing.api.2gis.com/public_transport/2.0?key={token}"
+getSights = f"https://catalog.api.2gis.com/3.0/items?"
