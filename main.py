@@ -52,14 +52,14 @@ def func(message):
                          text="Добро пожаловать в бот для построения маршрутов".format(
                              message.from_user), reply_markup=markup)
     elif (message.text == "2Gis"):
-        result = gis.PublicTransport(settings.gis_url)
+        result = gis.PublicTransport(settings.gis_public_transport_url)
         bot.send_message(message.chat.id,
                          text=result.text[:50])
     elif fl!=0:
         s=str(message.text)
         try:
             s2=list(map(str,s.split(", ")))
-            ret(s2[0],s2[1],fl)
+            result = gis.PublicTransport(settings.gis_public_transport_url, s2[0], s2[1])
         except:
             bot.send_message(message.chat.id,
                              text="Неправильный формат данных. Введите снова".format(
