@@ -1,35 +1,44 @@
 import requests
 import settings
 
+def determineCoordinates(adress):
+    # Ф-я для определения координат точки
+    resp_url = f"https://catalog.api.2gis.com/3.0/items/geocode?q={adress}&fields=items.point&key={settings.key}"
+    response = requests.get(resp_url)
+    lon = response.json()["result"]["items"][0]["point"]["lon"]
+    lat = response.json()["result"]["items"][0]["point"]["lat"]
+    return [lat, lon]
+def PublicTransport(url, start, end):
 
-def PublicTransport(url):
+    start_lat, start_lon = determineCoordinates(start)
+    end_lat, end_lon = determineCoordinates(end)
     d = {
         "locale": "ru",
         "source":
+        {
+            "name": start,
+            "point":
             {
-                "name": "Point A",
-                "point":
-                    {
-                        "lat": 51.734588,
-                        "lon": 36.149328
-                    }
-            },
+                "lat": start_lat,
+                "lon": start_lon
+            }
+        },
         "target":
+        {
+            "name": end,
+            "point":
             {
-                "name": "Point B",
-                "point":
-                    {
-                        "lat": 51.734183,
-                        "lon": 36.176865
-                    }
-            },
+                "lat": end_lat,
+                "lon": end_lon
+            }
+        },
         "transport": ["bus", "tram"]
     }
     headers = {
         "Content-Type": "application/json"
     }
     resp = requests.post(url, json=d, headers=headers)
-    return resp
+    return resp.json()
 
 
 def getSight(x, y):
@@ -46,3 +55,4 @@ def getRoute(args, way="multimodal"):
     for val in args:
         url += f"{val[0]}%2C{val[1]}%3B{val[2]}" + "%7C"
     return url
+print(PublicTransport(settings.gis_url))
