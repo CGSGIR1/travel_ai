@@ -53,15 +53,12 @@ def func(message):
         bot.send_message(message.chat.id,
                          text="Добро пожаловать в бот для построения маршрутов".format(
                              message.from_user), reply_markup=markup)
-    elif (message.text == "2Gis"):
-        result = gis.PublicTransport(settings.gis_public_transport_url)
-        bot.send_message(message.chat.id,
-                         text=result.text[:50])
     elif active_sessions[message.chat.id]!=0:
         s=str(message.text)
         try:
             s2=list(map(str,s.split(", ")))
-            result = gis.PublicTransport(settings.gis_public_transport_url, s2[0], s2[1])
+            result = gis.PublicTransport(settings.gis_url, s2[0], s2[1])
+            print(result[0]["total_walkway_distance"])
         except:
             bot.send_message(message.chat.id,
                              text="Неправильный формат данных. Введите снова".format(

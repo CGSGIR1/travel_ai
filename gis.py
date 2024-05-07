@@ -55,4 +55,3 @@ def getRoute(args, way="multimodal"):
     for val in args:
         url += f"{val[0]}%2C{val[1]}%3B{val[2]}" + "%7C"
     return url
-print(PublicTransport(settings.gis_url))
