@@ -58,7 +58,6 @@ def func(message):
         try:
             s2=list(map(str,s.split(", ")))
             result = gis.PublicTransport(settings.gis_url, s2[0], s2[1])
-            print(result[0]["total_walkway_distance"])
         except:
             bot.send_message(message.chat.id,
                              text="Неправильный формат данных. Введите снова".format(

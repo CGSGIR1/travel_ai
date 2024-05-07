@@ -13,3 +13,4 @@
 /static/*
 /tmp/*
 /venv
+.idea/misc.xml

@@ -3,11 +3,12 @@ import settings
 
 def determineCoordinates(adress):
     # Ф-я для определения координат точки
-    resp_url = f"https://catalog.api.2gis.com/3.0/items/geocode?q={adress}&fields=items.point&key={settings.key}"
+    resp_url = f"https://catalog.api.2gis.com/3.0/items/geocode?q={adress}&fields=items.point&key={settings.token}"
     response = requests.get(resp_url)
-    lon = response.json()["result"]["items"][0]["point"]["lon"]
     lat = response.json()["result"]["items"][0]["point"]["lat"]
-    return [lat, lon]
+    lon = response.json()["result"]["items"][0]["point"]["lon"]
+    id = response.json()["result"]["items"][0]["id"]
+    return [lat, lon, id]
 def PublicTransport(url, start, end):
 
     start_lat, start_lon = determineCoordinates(start)
@@ -55,3 +56,4 @@ def getRoute(args, way="multimodal"):
     for val in args:
         url += f"{val[0]}%2C{val[1]}%3B{val[2]}" + "%7C"
     return url
+print(determineCoordinates("Санкт-Петербург"))
