@@ -57,8 +57,9 @@ def func(message):
         s=str(message.text)
         try:
             s2=list(map(str,s.split(", ")))
-            result = gis.getLink(s2[0], s2[1])
-            bot==
+            link = gis.getLink(s2[0], s2[1])
+            bot.send_message(message.chat.id,
+                             text=link)
         except:
             bot.send_message(message.chat.id,
                              text="Неправильный формат данных. Введите снова".format(
