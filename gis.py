@@ -1,15 +1,19 @@
 import requests
 import settings
-import json
 
 
 def determineCoordinates(adress):
     # Ф-я для определения координат точки
-    resp_url = f"https://catalog.api.2gis.com/3.0/items/geocode?q={adress}&fields=items.point&key={settings.key}"
+    resp_url = f"https://catalog.api.2gis.com/3.0/items/geocode?q={adress}&fields=items.point&key={settings.token}"
     response = requests.get(resp_url)
-    lon = response.json()["result"]["items"][0]["point"]["lon"]
     lat = response.json()["result"]["items"][0]["point"]["lat"]
-    return [lat, lon]
+    lon = response.json()["result"]["items"][0]["point"]["lon"]
+    id = response.json()["result"]["items"][0]["id"]
+    return [lat, lon, id]
+
+
+def getLink(*args):
+    return getRoute([determineCoordinates(val) for val in args])
 
 
 def PublicTransport(url, start, end):
@@ -54,7 +58,8 @@ def getSight(x, y):
 
 
 def getRoute(args, way="multimodal"):
+    print(type(args))
     url = f"https://2gis.ru/directions/points/"
     for val in args:
-        url += f"{val[0]}%2C{val[1]}%3B{val[2]}" + "%7C"  # x, y, id
+        url += f"{val[1]}%2C{val[0]}%3B{val[2]}" + "%7C"
     return url
