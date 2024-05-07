@@ -1,5 +1,6 @@
 import requests
 import settings
+import json
 
 
 def PublicTransport(url):
@@ -29,6 +30,7 @@ def PublicTransport(url):
         "Content-Type": "application/json"
     }
     resp = requests.post(url, json=d, headers=headers)
+    print(resp.json())
     return resp
 
 
@@ -44,5 +46,6 @@ def getSight(x, y):
 def getRoute(args, way="multimodal"):
     url = f"https://2gis.ru/directions/points/"
     for val in args:
-        url += f"{val[0]}%2C{val[1]}%3B{val[2]}" + "%7C"
+        url += f"{val[0]}%2C{val[1]}%3B{val[2]}" + "%7C"  # x, y, id
     return url
+
