@@ -12,9 +12,8 @@ def determineCoordinates(adress):
 def getLink(*args):
     return getRoute([determineCoordinates(val) for val in args])
 def PublicTransport(url, start, end):
-
-    start_lat, start_lon = determineCoordinates(start)
-    end_lat, end_lon = determineCoordinates(end)
+    start_lat, start_lon = determineCoordinates(start)[:2]
+    end_lat, end_lon = determineCoordinates(end)[:2]
     d = {
         "locale": "ru",
         "source":
@@ -43,6 +42,9 @@ def PublicTransport(url, start, end):
     resp = requests.post(url, json=d, headers=headers)
     return resp.json()
 
+def DirectionsAPI(url, start, end, trans_type):
+    start_lat, start_lon = determineCoordinates(start)[:2]
+    end_lat, end_lon = determineCoordinates(end)[:2]
 
 def getSight(x, y):
     url = settings.getSights + f"q=Достопримечательность&sort_point={x},{y}&key={settings.token}"
@@ -56,6 +58,5 @@ def getSight(x, y):
 def getRoute(args, way="multimodal"):
     url = f"https://2gis.ru/directions/points/"
     for val in args:
-        url += f"{val[0]}%2C{val[1]}%3B{val[2]}" + "%7C"
+        url += f"{val[1]}%2C{val[0]}%3B{val[2]}" + "%7C"
     return url
-print(determineCoordinates("Санкт-Петербург"))
