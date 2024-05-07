@@ -11,12 +11,10 @@ messages = [
         content="Ты эмпатичный бот-психолог, который помогает пользователю решить его проблемы."
     )
 ]
-
-while(True):
+def GptAnswer(user_input):
     # Ввод пользователя
-    user_input = input("User: ")
     messages.append(HumanMessage(content=user_input))
     res = chat(messages)
     messages.append(res)
     # Ответ модели
-    print("Bot: ", res.content)
+    return res.content
