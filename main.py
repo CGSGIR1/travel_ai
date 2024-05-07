@@ -57,7 +57,7 @@ def func(message):
         s=str(message.text)
         try:
             s2=list(map(str,s.split(", ")))
-            result = gis.PublicTransport(settings.gis_url, s2[0], s2[1])
+            result = gis.getLink(s2[0], s2[1])
         except:
             bot.send_message(message.chat.id,
                              text="Неправильный формат данных. Введите снова".format(

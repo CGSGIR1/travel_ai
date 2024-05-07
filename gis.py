@@ -9,6 +9,8 @@ def determineCoordinates(adress):
     lon = response.json()["result"]["items"][0]["point"]["lon"]
     id = response.json()["result"]["items"][0]["id"]
     return [lat, lon, id]
+def getLink(*args):
+    return getRoute([determineCoordinates(val) for val in args])
 def PublicTransport(url, start, end):
 
     start_lat, start_lon = determineCoordinates(start)
