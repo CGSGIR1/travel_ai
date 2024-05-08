@@ -17,43 +17,6 @@ def getLink(*args):
     return getRoute([determineCoordinates(val) for val in args])
 
 
-def PublicTransport(url, start, end):
-    start_lat, start_lon = determineCoordinates(start)[:2]
-    end_lat, end_lon = determineCoordinates(end)[:2]
-    d = {
-        "locale": "ru",
-        "source":
-            {
-                "name": start,
-                "point":
-                    {
-                        "lat": start_lat,
-                        "lon": start_lon
-                    }
-            },
-        "target":
-            {
-                "name": end,
-                "point":
-                    {
-                        "lat": end_lat,
-                        "lon": end_lon
-                    }
-            },
-        "transport": ["bus", "tram"]
-    }
-    headers = {
-        "Content-Type": "application/json"
-    }
-    resp = requests.post(url, json=d, headers=headers)
-    return resp.json()
-
-
-def DirectionsAPI(url, start, end, trans_type):
-    start_lat, start_lon = determineCoordinates(start)[:2]
-    end_lat, end_lon = determineCoordinates(end)[:2]
-
-
 def getSight(address):
     x, y, ind = determineCoordinates(address)
     url = settings.getSights + f"q=Достопримечательность&sort_point={y},{x}&key={settings.token}"
