@@ -1,6 +1,7 @@
 import requests
 import settings
 
+
 def determineCoordinates(adress):
     # Ф-я для определения координат точки
     resp_url = f"https://catalog.api.2gis.com/3.0/items/geocode?q={adress}&fields=items.point&key={settings.token}"
@@ -9,31 +10,35 @@ def determineCoordinates(adress):
     lon = response.json()["result"]["items"][0]["point"]["lon"]
     id = response.json()["result"]["items"][0]["id"]
     return [lat, lon, id]
+
+
 def getLink(*args):
     return getRoute([determineCoordinates(val) for val in args])
+
+
 def PublicTransport(url, start, end):
     start_lat, start_lon = determineCoordinates(start)[:2]
     end_lat, end_lon = determineCoordinates(end)[:2]
     d = {
         "locale": "ru",
         "source":
-        {
-            "name": start,
-            "point":
             {
-                "lat": start_lat,
-                "lon": start_lon
-            }
-        },
+                "name": start,
+                "point":
+                    {
+                        "lat": start_lat,
+                        "lon": start_lon
+                    }
+            },
         "target":
-        {
-            "name": end,
-            "point":
             {
-                "lat": end_lat,
-                "lon": end_lon
-            }
-        },
+                "name": end,
+                "point":
+                    {
+                        "lat": end_lat,
+                        "lon": end_lon
+                    }
+            },
         "transport": ["bus", "tram"]
     }
     headers = {
@@ -42,15 +47,22 @@ def PublicTransport(url, start, end):
     resp = requests.post(url, json=d, headers=headers)
     return resp.json()
 
+
 def DirectionsAPI(url, start, end, trans_type):
     start_lat, start_lon = determineCoordinates(start)[:2]
     end_lat, end_lon = determineCoordinates(end)[:2]
 
-def getSight(x, y):
-    url = settings.getSights + f"q=Достопримечательность&sort_point={x},{y}&key={settings.token}"
+
+def getSight(address):
+    x, y, ind = determineCoordinates(address)
+    url = settings.getSights + f"q=Достопримечательность&sort_point={y},{x}&key={settings.token}"
     try:
         response = requests.get(url)
-        return response.json()
+        mas = response.json()["result"]["items"][0:10]
+        arr = []
+        for val in mas:
+            arr.append(val["full_name"])
+        return arr
     except requests.exceptions.InvalidSchema:
         return {"status": "400"}
 
