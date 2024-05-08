@@ -1,11 +1,13 @@
 from langchain_community.embeddings.gigachat import GigaChatEmbeddings
 from langchain.document_loaders import CSVLoader, TextLoader
 from pickle import dump, load
+import logging
 from langchain.text_splitter import (
     RecursiveCharacterTextSplitter,
 )
 import os.path
 import settings
+logging.basicConfig(level=logging.INFO)
 
 
 
@@ -20,12 +22,15 @@ def CreateEmbeddings():
         chunk_overlap=200,
     )
 
-    documents = text_splitter.split_documents(documents)
-    print(f"Total documents: {len(documents)}")
+    if not (os.path.exists('./DataBase/documents.pkl')):
+        logging.info("Разбиение текста ")
+        documents = text_splitter.split_documents(documents)
+        #print(f"Total documents: {len(documents)}")
 
-    embeddings = GigaChatEmbeddings(
-        credentials=settings.idf, verify_ssl_certs=False
-    )
+        logging.info("Генерация эмбедингов")
+        embeddings = GigaChatEmbeddings(
+            credentials=settings.idf, verify_ssl_certs=False
+        )
     with open('./DataBase/embeddings.pkl', 'wb') as fp:
         dump(embeddings, fp)
     with open('./DataBase/documents.pkl', 'wb') as fp:
