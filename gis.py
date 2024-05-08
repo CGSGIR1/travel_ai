@@ -1,5 +1,6 @@
 import requests
 import settings
+import time
 
 
 def determineCoordinates(adress):
@@ -72,3 +73,24 @@ def getRoute(args, way="multimodal"):
     for val in args:
         url += f"{val[1]}%2C{val[0]}%3B{val[2]}" + "%7C"
     return url
+
+
+def makeRoute(args):
+    try:
+        agents = [{"agent_id": 0, "start_waypoint_id": 0, "finish_waypoint_id": len(args) - 1}]
+        waypoints = []
+        for i in range(len(args)):
+            coordinates = determineCoordinates(args[i])
+            waypoints.append({"waypoint_id": i, "point": {"lat": coordinates[0], "lon": coordinates[1]}})
+        task_id = requests.post(settings.makeOpt, json={"agents": agents, "waypoints": waypoints}).json()["task_id"]
+        time.sleep(2.5)
+        response = requests.get(settings.getRoute + f"{task_id}&key={settings.add}").json()
+        response = response["urls"]["url_vrp_solution"]
+        mas = []
+        for val in requests.get(response).json()["routes"][0]["points"]:
+            mas.append(args[val])
+        print(mas)
+        return mas
+    except KeyError:
+        print(":(")
+        return {"status": "411"}
