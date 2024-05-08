@@ -89,8 +89,6 @@ def makeRoute(args):
         mas = []
         for val in requests.get(response).json()["routes"][0]["points"]:
             mas.append(args[val])
-        print(mas)
         return mas
     except KeyError:
-        print(":(")
         return {"status": "411"}
