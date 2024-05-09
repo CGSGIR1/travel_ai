@@ -1,11 +1,13 @@
 import requests
 import settings
 import time
+import logging
+logging.basicConfig(level=logging.INFO)
 
 
 def determineCoordinates(adress):
     # Ф-я для определения координат точки
-    resp_url = f"https://catalog.api.2gis.com/3.0/items/geocode?q={adress}&fields=items.point&key={settings.token}"
+    resp_url = f"https://catalog.api.2gis.com/3.0/items/geocode?q={adress}&fields=items.point&key={settings.key}"
     response = requests.get(resp_url)
     lat = response.json()["result"]["items"][0]["point"]["lat"]
     lon = response.json()["result"]["items"][0]["point"]["lon"]
@@ -14,49 +16,17 @@ def determineCoordinates(adress):
 
 
 def getLink(*args):
-    return getRoute([determineCoordinates(val) for val in args])
-
-
-def PublicTransport(url, start, end):
-    start_lat, start_lon = determineCoordinates(start)[:2]
-    end_lat, end_lon = determineCoordinates(end)[:2]
-    d = {
-        "locale": "ru",
-        "source":
-            {
-                "name": start,
-                "point":
-                    {
-                        "lat": start_lat,
-                        "lon": start_lon
-                    }
-            },
-        "target":
-            {
-                "name": end,
-                "point":
-                    {
-                        "lat": end_lat,
-                        "lon": end_lon
-                    }
-            },
-        "transport": ["bus", "tram"]
-    }
-    headers = {
-        "Content-Type": "application/json"
-    }
-    resp = requests.post(url, json=d, headers=headers)
-    return resp.json()
-
-
-def DirectionsAPI(url, start, end, trans_type):
-    start_lat, start_lon = determineCoordinates(start)[:2]
-    end_lat, end_lon = determineCoordinates(end)[:2]
+    try:
+        return getRoute([determineCoordinates(val) for val in args])
+    except Exception as e:
+        logging.error(e)
+        logging.error("2Gis ключ устарел")
+        return False
 
 
 def getSight(address):
     x, y, ind = determineCoordinates(address)
-    url = settings.getSights + f"q=Достопримечательность&sort_point={y},{x}&key={settings.token}"
+    url = settings.getSights + f"q=Достопримечательность&sort_point={y},{x}&key={settings.key}"
     try:
         response = requests.get(url)
         mas = response.json()["result"]["items"][0:10]
