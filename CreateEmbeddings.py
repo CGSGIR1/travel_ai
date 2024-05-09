@@ -28,5 +28,5 @@ def CreateEmbeddings():
        documents,
        embeddings_creator,
        client_settings=Settings(anonymized_telemetry=False),
-       persist_directory='./DataBase/db.pkl'
+       persist_directory='./DataBase'
     )

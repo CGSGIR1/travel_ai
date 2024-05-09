@@ -13,7 +13,7 @@ def GigachatStart():
         credentials=settings.idf, verify_ssl_certs=False
     )
     db = Chroma(
-       persist_directory='./DataBase/db.pkl',
+       persist_directory='./DataBase',
        embedding_function=embeddings_creator,
        client_settings=Settings(anonymized_telemetry=False),
     )

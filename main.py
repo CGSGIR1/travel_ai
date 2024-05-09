@@ -4,8 +4,10 @@ from telebot import types
 import gis, settings
 from testik import GptAnswer
 from ModelLoad import GigachatStart, AIResponse
+from CreateEmbeddings import CreateEmbeddings
 bot = telebot.TeleBot('7131622872:AAExYrKxu4Fw3z9wyLbxEpk-oZgkdwd6XRY')
 active_sessions=dict()
+CreateEmbeddings()
 GigaChat = GigachatStart()
 @bot.message_handler(commands=['start'])
 def start(message):
