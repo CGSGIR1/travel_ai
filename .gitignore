@@ -13,3 +13,5 @@
 /static/*
 /tmp/*
 /venv
+.idea/misc.xml
+DataBase/res.csv
