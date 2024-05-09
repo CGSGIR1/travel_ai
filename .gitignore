@@ -3,7 +3,7 @@
 *.pyc
 .DS_Store
 .cache/
-.idea
+/.idea
 .ipynb_checkpoints
 .pytest_cache
 .python-version
