@@ -1,4 +1,4 @@
-key = "d6eac903-d3d2-45f0-8345-981f03a9c39a"
+key = "7f698cb1-c651-4c57-b901-47fe629d77c7"
 token = "e54ece61-706e-4274-9daa-51a572cf8c7c"
 add = "1491bea8-d2f8-4954-a654-cbbc9028d5c2"
 getSights = f"https://catalog.api.2gis.com/3.0/items?"

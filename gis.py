@@ -15,8 +15,9 @@ def determineCoordinates(adress):
     return [lat, lon, id]
 
 
-def getLink(*args):
+def getLink(attrAdresses, *args):
     try:
+        args = [args[0]] + getAdressForAttracitons(attrAdresses) + [args[1]]
         return getRoute([determineCoordinates(val) for val in args])
     except Exception as e:
         logging.error(e)
@@ -41,7 +42,7 @@ def getSight(address):
 def getRoute(args, way="multimodal"):
     url = f"https://2gis.ru/directions/points/"
     for val in args:
-        url += f"{val[1]}%2C{val[0]}%3B{val[2]}" + "%7C"
+        url += f"{val[1]}%2C{val[0]}" + "%7C"
     return url
 
 
@@ -62,3 +63,6 @@ def makeRoute(args):
         return mas
     except KeyError:
         return {"status": "411"}
+def getAdressForAttracitons(gig_answer):
+    return gig_answer.split("$")
+print(getLink("Москва-сити$Кремль$ВДНХ", "Санкт-Петербург", "Москва"))
