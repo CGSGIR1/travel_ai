@@ -13,5 +13,5 @@
 /static/*
 /tmp/*
 /venv
-/testembd.py
 .idea/misc.xml
+DataBase/res.csv

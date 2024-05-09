@@ -1,5 +1,6 @@
-telebot
-gigachain
-faiss-cpu
-google-api-python-client>=2.100.0
-gigachain-community
+telebot==0.0.5
+gigachain==0.1.17
+faiss-cpu==1.8.0
+google-api-python-client==2.128.0
+gigachain-community==0.0.36
+chromadb==0.4.3
