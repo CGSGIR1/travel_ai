@@ -4,9 +4,12 @@ from telebot import types
 import gis, settings
 from testik import GptAnswer
 from ModelLoad import GigachatStart, AIResponse
+import logging
+logging.basicConfig(level=logging.INFO)
 bot = telebot.TeleBot('7131622872:AAExYrKxu4Fw3z9wyLbxEpk-oZgkdwd6XRY')
 active_sessions=dict()
 GigaChat = GigachatStart()
+logging.info("ГигаЧат загрузили")
 @bot.message_handler(commands=['start'])
 def start(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -63,14 +66,15 @@ def func(message):
         s=str(message.text)
         try:
             s2=list(map(str,s.split("->")))
-            #link = gis.getLink(s2[0], s2[1])
+            link = gis.getLink(s2[0], s2[1])
             answer = AIResponse(s2[1], GigaChat)
             bot.send_message(message.chat.id,
                              text=answer)
-            #bot.send_message(message.chat.id,
-            #                     text=f'<a href="{link}">Ссылка на 2гис</a>', parse_mode="HTML")
+            bot.send_message(message.chat.id,
+                                text=f'<a href="{link}">Ссылка на 2гис</a>', parse_mode="HTML")
             active_sessions[message.chat.id] = 0
-        except:
+        except Exception as e:
+            logging.error(e)
             bot.send_message(message.chat.id,
                              text="Неправильный формат данных. Введите снова".format(
                                  message.from_user))
