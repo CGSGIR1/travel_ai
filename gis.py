@@ -66,7 +66,8 @@ def makeRoute(args):
         for i in range(len(args)):
             coordinates = determineCoordinates(args[i])
             waypoints.append({"waypoint_id": i, "point": {"lat": coordinates[0], "lon": coordinates[1]}})
-        task_id = requests.post(settings.makeOpt, json={"agents": agents, "waypoints": waypoints}).json()["task_id"]
+        task_id = requests.post(settings.makeOpt + f"{settings.keys[index_token]}",
+                                json={"agents": agents, "waypoints": waypoints}).json()["task_id"]
         time.sleep(2.5)
         response = requests.get(settings.getRoute + f"{task_id}&key={settings.keys[index_token]}").json()
         response = response["urls"]["url_vrp_solution"]
