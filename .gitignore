@@ -3,7 +3,8 @@
 *.pyc
 .DS_Store
 .cache/
-.idea
+.idea/*
+/.idea/*
 .ipynb_checkpoints
 .pytest_cache
 .python-version
@@ -15,3 +16,4 @@
 /venv
 .idea/misc.xml
 DataBase/res.csv
+/pythonProject1

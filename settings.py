@@ -1,6 +1,10 @@
-keys = ["d6eac903-d3d2-45f0-8345-981f03a9c39a", "1491bea8-d2f8-4954-a654-cbbc9028d5c2",
-        "31483067-effe-463c-8876-7199a4eed56e", "042471f3-ce42-4fe9-95c7-f23e5d3d73c2",
-        "7f698cb1-c651-4c57-b901-47fe629d77c7"]
+keys = [
+        "62d0d797-2d57-416c-add8-4758500d9e5a",
+        "c798f9b7-95e0-4228-ac87-9dff6cfd37d7",
+        "96c125fc-c1d0-499f-bd63-f574b9996c83",
+        "79552add-3a03-49bf-a5d0-0f9b33e92118",
+        "90b9ccf1-33a7-4c35-accb-36225d1a2db6",
+]
 getSights = f"https://catalog.api.2gis.com/3.0/items?"
 makeOpt = f"https://routing.api.2gis.com/logistics/vrp/1.1.0/create?key="
 getRoute = "https://routing.api.2gis.com/logistics/vrp/1.1.0/status?task_id="
