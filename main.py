@@ -7,7 +7,7 @@ from ModelLoad import GigachatStart, AIResponse
 import logging
 
 logging.basicConfig(level=logging.INFO)
-bot = telebot.TeleBot('7131622872:AAExYrKxu4Fw3z9wyLbxEpk-oZgkdwd6XRY')
+bot = telebot.TeleBot(settings.telebot_token)
 active_sessions = dict()
 GigaChat = GigachatStart()
 logging.info("ГигаЧат загрузили")
@@ -67,7 +67,20 @@ def func(message):
         bot.send_message(message.chat.id,
                          text="Добро пожаловать в бот для построения маршрутов".format(
                              message.from_user), reply_markup=markup)
-    elif active_sessions[message.chat.id] != 0:
+    elif active_sessions[message.chat.id] == 1:
+        s = str(message.text)
+        try:
+            s2 = list(map(str, s.split("->")))
+            link = gis.getLink(s2[1:], s2[0])
+            bot.send_message(message.chat.id,
+                             text=settings.makeLink(link), parse_mode="HTML")
+            active_sessions[message.chat.id] = 0
+        except Exception as e:
+            logging.error(e)
+            bot.send_message(message.chat.id,
+                             text="Неправильный формат данных. Введите снова".format(
+                                 message.from_user))
+    elif active_sessions[message.chat.id] == 2:
         s = str(message.text)
         try:
             s2 = list(map(str, s.split("->")))
@@ -77,9 +90,7 @@ def func(message):
                 attractions = attractions + gis.split(s2[i], answer)
             link = gis.getLink(attractions, s2[0])
             bot.send_message(message.chat.id,
-                             text=answer)
-            bot.send_message(message.chat.id,
-                             text=f'<a href="{link}">Ссылка на 2гис</a>', parse_mode="HTML")
+                             text=settings.makeLink(link), parse_mode="HTML")
             active_sessions[message.chat.id] = 0
             # markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
             # btnGuide = types.KeyboardButton("Узнать поподробнее об этих достопримечательностях")
