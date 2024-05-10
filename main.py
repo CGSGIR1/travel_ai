@@ -47,7 +47,7 @@ def func(message):
         hideBoard.add(btnGuide)
         hideBoard.add(mainMenuBtn)
         bot.send_message(message.chat.id,
-                         text="Здравствуйте! Я рада, что вы заинтересовались моими услугами. Чем я могу вам помочь?")
+                         text="Здравствуйте! Я рада, что вы заинтересовались моими услугами. Чем я могу вам помочь?", reply_markup=hideBoard)
     elif (message.text == "Прямой"):
         active_sessions[message.chat.id] = 1
         hideBoard = types.ReplyKeyboardMarkup(resize_keyboard=True)
