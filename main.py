@@ -85,12 +85,20 @@ def func(message):
         s = str(message.text)
         try:
             s2 = list(map(str, s.split("->")))
-            answer = AIResponse(s2[1], GigaChat)
-            attractions = gis.split(s2[1], answer)
+            attractions = []
+            for i in range(1, len(s2)):
+                answer = AIResponse(s2[i], GigaChat)
+                attractions = attractions + gis.split(s2[i], answer)
             link = gis.getLink(attractions, s2[0])
             bot.send_message(message.chat.id,
                              text=f'<a href="{link}">Ссылка на 2гис</a>', parse_mode="HTML")
             active_sessions[message.chat.id] = 0
+            # markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+            # btnGuide = types.KeyboardButton("Узнать поподробнее об этих достопримечательностях")
+            # markup.add(btnGuide)
+            # bot.send_message(message.chat.id,
+            #                  text="".format(
+            #                      message.from_user), reply_markup=markup)
         except Exception as e:
             logging.error(e)
             bot.send_message(message.chat.id,
