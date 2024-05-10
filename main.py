@@ -4,14 +4,15 @@ from telebot import types
 import gis, settings
 from testik import GptAnswer
 from ModelLoad import GigachatStart, AIResponse
+from CreateEmbeddings import CreateEmbeddings
 import logging
 
 logging.basicConfig(level=logging.INFO)
 bot = telebot.TeleBot(settings.telebot_token)
 active_sessions = dict()
-GigaChat = GigachatStart()
+CreateEmbeddings()
+GigaChat, GigaRet = GigachatStart()
 logging.info("ГигаЧат загрузили")
-
 
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -50,23 +51,25 @@ def func(message):
         hideBoard = types.ReplyKeyboardMarkup(resize_keyboard=True)
         btn3 = types.KeyboardButton("В главное меню📱")
         hideBoard.add(btn3)
-        bot.send_message(message.chat.id, text="Введите адрес отправления и прибытия в формате: Адрес1->Адрес2",
+        bot.send_message(message.chat.id, text="Введите адрес отправления и прибытия в формате: Город отправления -> Город прибытия",
                          reply_markup=hideBoard)
     elif (message.text == "Экскурсионный"):
         active_sessions[message.chat.id] = 2
         hideBoard = types.ReplyKeyboardMarkup(resize_keyboard=True)
         btn3 = types.KeyboardButton("В главное меню📱")
         hideBoard.add(btn3)
-        bot.send_message(message.chat.id, text="Введите адрес отправления и прибытия в формате: Адрес1->Адрес2",
-                         reply_markup=hideBoard)
+        bot.send_message(message.chat.id, text="Введите адрес отправления и прибытия в формате: Город отправления -> Город прибытия",
+                         reply_markup=hideBoard, parse_mode='MARKDOWN')
     elif (message.text == "В главное меню📱"):
         active_sessions[message.chat.id] = 0
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         btn1 = types.KeyboardButton("Построить маршрут")
+        btnGuide = types.KeyboardButton("Пообщаться с гидом")
+        markup.add(btnGuide)
         markup.add(btn1)
         bot.send_message(message.chat.id,
                          text="Добро пожаловать в бот для построения маршрутов".format(
-                             message.from_user), reply_markup=markup)
+                             message.from_user), reply_markup=markup, parse_mode='MARKDOWN')
     elif active_sessions[message.chat.id] == 1:
         s = str(message.text)
         try:
@@ -86,18 +89,20 @@ def func(message):
             s2 = list(map(str, s.split("->")))
             attractions = []
             for i in range(1, len(s2)):
-                answer = AIResponse(s2[i], GigaChat)
+                answer = AIResponse(s2[i], GigaChat, GigaRet)
                 attractions = attractions + gis.split(s2[i], answer)
             link = gis.getLink(attractions, s2[0])
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+            btnGuide = types.KeyboardButton("Пообщаться с гидом")
+            markup.add(btnGuide)
             bot.send_message(message.chat.id,
-                             text=settings.makeLink(link), parse_mode="HTML")
+                             text=settings.makeLink(link), parse_mode="HTML", reply_markup=markup)
             active_sessions[message.chat.id] = 0
             # markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
             # btnGuide = types.KeyboardButton("Узнать поподробнее об этих достопримечательностях")
             # markup.add(btnGuide)
             # bot.send_message(message.chat.id,
             #                  text="".format(
-            #
             #                      message.from_user), reply_markup=markup)
         except Exception as e:
             logging.error(e)

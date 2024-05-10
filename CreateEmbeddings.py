@@ -1,38 +1,31 @@
 from langchain_community.embeddings.gigachat import GigaChatEmbeddings
 from langchain.document_loaders import CSVLoader, TextLoader
-from pickle import dump, load
 import logging
 from langchain.text_splitter import (
     RecursiveCharacterTextSplitter,
 )
 import os.path
 import settings
+from langchain_community.vectorstores import FAISS
 logging.basicConfig(level=logging.INFO)
 
-
-
 def CreateEmbeddings():
-    if os.path.exists('./DataBase/embeddings.pkl') and os.path.exists('./DataBase/documents.pkl'):
+    if os.path.exists('./faiss_index/index.faiss') and os.path.exists('./faiss_index/index.pkl'):
         return
-
-    loader = TextLoader("./DataBase/res1.txt", encoding="UTF-8")
+    loader = CSVLoader("./DataBase/res1.csv", encoding="UTF-8")
     documents = loader.load()
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1000,
-        chunk_overlap=200,
+        chunk_size=512,
+        chunk_overlap=200
     )
-
-    if not (os.path.exists('./DataBase/documents.pkl')):
-        logging.info("Разбиение текста ")
-        documents = text_splitter.split_documents(documents)
-        #print(f"Total documents: {len(documents)}")
-
-        logging.info("Генерация эмбедингов")
-        embeddings = GigaChatEmbeddings(
-            credentials=settings.idf, verify_ssl_certs=False
-        )
-    with open('./DataBase/embeddings.pkl', 'wb') as fp:
-        dump(embeddings, fp)
-    with open('./DataBase/documents.pkl', 'wb') as fp:
-        dump(documents, fp)
-
+    logging.info("Разбиение текста ")
+    documents = text_splitter.split_documents(documents)
+    logging.info("Генерация эмбедингов")
+    embeddings = GigaChatEmbeddings(
+        credentials=settings.idf, verify_ssl_certs=False
+    )
+    db = FAISS.from_documents(
+       documents,
+       embeddings,
+    )
+    db.save_local("./faiss_index")
