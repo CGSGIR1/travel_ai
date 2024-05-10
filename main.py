@@ -71,8 +71,7 @@ def func(message):
         s = str(message.text)
         try:
             s2 = list(map(str, s.split("->")))
-            attractions = gis.split(s2[1])
-            link = gis.getLink(attractions, s2[0])
+            link = gis.getLink(s2[1:], s2[0])
             bot.send_message(message.chat.id,
                              text=f'<a href="{link}">Ссылка на 2гис</a>', parse_mode="HTML")
             active_sessions[message.chat.id] = 0
