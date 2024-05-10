@@ -43,6 +43,8 @@ def func(message):
     elif (message.text == "Пообщаться с гидом"):
         hideBoard = types.ReplyKeyboardMarkup(resize_keyboard=True)
         mainMenuBtn = types.KeyboardButton("В главное меню📱")
+        btnGuide = types.KeyboardButton("Пообщаться с гидом")
+        hideBoard.add(btnGuide)
         hideBoard.add(mainMenuBtn)
         bot.send_message(message.chat.id,
                          text="Здравствуйте! Я рада, что вы заинтересовались моими услугами. Чем я могу вам помочь?")
