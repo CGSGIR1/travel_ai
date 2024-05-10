@@ -97,6 +97,7 @@ def func(message):
             # markup.add(btnGuide)
             # bot.send_message(message.chat.id,
             #                  text="".format(
+            #
             #                      message.from_user), reply_markup=markup)
         except Exception as e:
             logging.error(e)
