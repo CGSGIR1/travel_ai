@@ -4,11 +4,13 @@ from telebot import types
 import gis, settings
 from testik import GptAnswer
 from ModelLoad import GigachatStart, AIResponse
+from CreateEmbeddings import CreateEmbeddings
 import logging
 
 logging.basicConfig(level=logging.INFO)
-bot = telebot.TeleBot('7131622872:AAExYrKxu4Fw3z9wyLbxEpk-oZgkdwd6XRY')
+bot = telebot.TeleBot('6507770554:AAElz9dqyXlonE-HPrCyupnLHs144km5Y-4')
 active_sessions = dict()
+CreateEmbeddings()
 GigaChat = GigachatStart()
 logging.info("ГигаЧат загрузили")
 
@@ -71,12 +73,12 @@ def func(message):
         s = str(message.text)
         try:
             s2 = list(map(str, s.split("->")))
-            link = gis.getLink(s2[0], s2[1])
+            #link = gis.getLink(s2[0], s2[1])
             answer = AIResponse(s2[1], GigaChat)
             bot.send_message(message.chat.id,
                              text=answer)
-            bot.send_message(message.chat.id,
-                             text=f'<a href="{link}">Ссылка на 2гис</a>', parse_mode="HTML")
+            #bot.send_message(message.chat.id,
+            #                 text=f'<a href="{link}">Ссылка на 2гис</a>', parse_mode="HTML")
             active_sessions[message.chat.id] = 0
         except Exception as e:
             logging.error(e)

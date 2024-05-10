@@ -1,29 +1,50 @@
-from pickle import load
 from chromadb.config import Settings
 from langchain.vectorstores import Chroma
 from langchain.chains import RetrievalQA
 from langchain.schema import HumanMessage
 from langchain.chat_models.gigachat import GigaChat
 import settings
+from langchain_community.vectorstores import FAISS
+from langchain_community.embeddings.gigachat import GigaChatEmbeddings
+import json
 
 def GigachatStart():
-    with open('./DataBase/documents.pkl', 'rb') as fp:
-        documents = load(fp)
-    with open('./DataBase/embeddings.pkl', 'rb') as fp:
-        embeddings = load(fp)
-    llm = GigaChat(credentials=settings.idf, verify_ssl_certs=False)
-
-    db = Chroma.from_documents(
-       documents,
-       embeddings,
-       client_settings=Settings(anonymized_telemetry=False),
+    embeddings = GigaChatEmbeddings(
+        credentials=settings.idf, verify_ssl_certs=False
     )
-    #f"Ты являеешься гидом по достопримечательностям России. Тебе нужно найти, 5 самых лучших достопримечательностей в регионе {request}. Ты должен вывести только их адреса, подряд, и разделяя ТОЛЬКО значком '$'"
-    return RetrievalQA.from_chain_type(llm, retriever=db.as_retriever())
-    #HumanMessage(content=user_input)
+    db = FAISS.load_local("./faiss_index", embeddings, allow_dangerous_deserialization=True)
+    query = "Коломна"
+    llm = GigaChat(credentials=settings.idf, verify_ssl_certs=False)
+    return db.as_retriever()
+    #return RetrievalQA.from_chain_type(llm, retriever=db.as_retriever())
 
-def AIResponse(request, qa_chain):
 
+payload = json.dumps({
+
+    "messages": [
+        {
+            "role": "system",
+            "content": "Ты - гид по достопримечательностям. Тебе дан город QUESTION и релевантные достопримечательности из искомого города.\nСоздай краткий и информативный ответ оператора ЦКР, основываясь исключительно на информации из приведённых отрывков.\nОтвечай исходя из имеющейся информации фразой оператора:"
+        },
+        {
+            "role": "user",
+            "content": "QUESTION: условия бизнес карты\n========="
+                       " Content: Условия по Кредитной бизнес - карте: Лимит от 100 000 до 1 000 000 рублей"
+                       " \nСрок 36 месяцев (далее пролонгация автоматом)"
+                       " \nНет платы за обслуживание"
+                       " \nЛьготный период без процентов – до 120 дней и до 150 у партнёров."
+                       " \nСтандартная ставка – 32,4% годовых для с/х; 33,6% - для остальных."
+                       " \nПартнеры (http://www.sberbank.ru/ru/s_m_business/cards/credit-businesscards/partners)."
+                       " \nБез залога Без поручительства \nОформление от трёх минут \nЛюбые цели \nОплата товаров и услуг в магазинах, на сайтах (нельзя оплачивать через платежные поручения) \nДоступно снятие наличных (комиссия 8%, минимум 300 рублей). Льготный период при снятии сохраняется. \nОбязательный платеж по основному долгу – 5% в месяц от задолженности на дату платежа. Проценты уплачиваются ежемесячно с учетом льготного периода кредитования. Source: /page/a419c30d-f80b-4e37-a9e2-94763bbe7c3a========= Ответ оператора:"
+
+        }
+    ],
+    "model": "GigaChat-Pro",
+    "temperature": 0.01
+})
+def AIResponse(request, ret, chat):
+    chat = GigaChat(credentials=settings.idf, verify_ssl_certs=False)
+    docs = ret.invoke(request)
     FormatRequest = (
         f"Уважаемая языковая модель, ваша задача - определить от трех до семи наиболее посещаемых туристами достопримечательностей в городе, указанном как {request}. Пожалуйста, убедитесь, что ваш ответ строго соответствует следующим правилам:\n"
         "1. Вывод должен состоять только из названий достопримечательностей, разделенных знаками доллара ($). Например, если город - Париж, ваш ответ должен выглядеть следующим образом: EiffelTower$LouvreMuseum$NotreDameCathedral$Montmartre$SacréCœur$SainteChapelle.\n"
