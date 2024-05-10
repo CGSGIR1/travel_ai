@@ -96,7 +96,9 @@ def makeRoute(args, index_token=0):
         logging.error("Закончились все ключи !!!")
 
 
-def split(end, ans):
+def split(end, ans=""):
+    if len(ans) == 0:
+        return [end]
     l = ans.split("$")
     for i in range(len(l)):
         l[i] = f"{end}, {l[i]}"
