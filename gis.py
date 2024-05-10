@@ -19,6 +19,8 @@ def determineCoordinates(address):
     except Exception as exception:
         index_token += 1
         if index_token >= len(settings.keys):
+            logging.error(exception)
+            logging.error("2Gis ключи устарели")
             index_token -= len(settings.keys)
         return determineCoordinates(address)
     return [lat, lon, id]
@@ -29,7 +31,7 @@ def getLink(*args):
         return getRoute([determineCoordinates(val) for val in args])
     except Exception as e:
         logging.error(e)
-        logging.error("2Gis ключ устарел")
+        logging.error("2Gis ключи устарели")
         return False
 
 
@@ -44,9 +46,11 @@ def getSight(address):
         for val in mas:
             arr.append(val["full_name"])
         return arr
-    except requests.exceptions.InvalidSchema:
+    except requests.exceptions.InvalidSchema as exception:
         index_token += 1
         if index_token >= len(settings.keys):
+            logging.error(exception)
+            logging.error("2Gis ключи устарели")
             index_token -= len(settings.keys)
         return getSight(address)
 
@@ -68,19 +72,31 @@ def makeRoute(args):
             waypoints.append({"waypoint_id": i, "point": {"lat": coordinates[0], "lon": coordinates[1]}})
         task_id = requests.post(settings.makeOpt + f"{settings.keys[index_token]}",
                                 json={"agents": agents, "waypoints": waypoints}).json()["task_id"]
-        time.sleep(2.5)
+        print(task_id)
+        time.sleep(4.5)
         response = requests.get(settings.getRoute + f"{task_id}&key={settings.keys[index_token]}").json()
+        print(response)
         response = response["urls"]["url_vrp_solution"]
         mas = []
         for val in requests.get(response).json()["routes"][0]["points"]:
             mas.append(args[val])
         return mas
-    except KeyError:
+    except KeyError as exception:
         index_token += 1
         if index_token >= len(settings.keys):
+            logging.error(exception)
+            logging.error("2Gis ключи устарели")
+            index_token -= len(settings.keys)
+        makeRoute(args)
+    except TypeError as exception:
+        index_token += 1
+        if index_token >= len(settings.keys):
+            logging.error(exception)
+            logging.error("2Gis ключи устарели")
             index_token -= len(settings.keys)
         makeRoute(args)
 
 
 def split(start, end, ans):
     return [start] + ans.split("$") + [end]
+
