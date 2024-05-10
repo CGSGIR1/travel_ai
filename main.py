@@ -71,8 +71,9 @@ def func(message):
         s = str(message.text)
         try:
             s2 = list(map(str, s.split("->")))
-            link = gis.getLink(s2[0], s2[1])
             answer = AIResponse(s2[1], GigaChat)
+            attractions = gis.split(s2[1], answer)
+            link = gis.getLink(attractions, s2[0])
             bot.send_message(message.chat.id,
                              text=answer)
             bot.send_message(message.chat.id,
