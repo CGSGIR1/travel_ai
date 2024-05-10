@@ -10,3 +10,6 @@ getSights = f"https://catalog.api.2gis.com/3.0/items?"
 makeOpt = f"https://routing.api.2gis.com/logistics/vrp/1.1.0/create?key="
 getRoute = "https://routing.api.2gis.com/logistics/vrp/1.1.0/status?task_id="
 idf = "Y2I5NzU5ZTMtMTZhMy00YzhmLTgwODAtNTAwZWQ1ZGEwYzMzOjU0YmY4ZjQwLWI5NTgtNDJiNi1iZGVjLWRhODI5MTY5NWEzMg=="
+telebot_token = "7131622872:AAF1NpdTKCUExxmwt2_bC5VmOlyRxD6BpXA"
+def makeLink(l):
+        return f'<a href="{l}">Ссылка на 2гис</a>'
