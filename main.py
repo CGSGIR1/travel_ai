@@ -37,6 +37,8 @@ def func(message):
         hideBoard = types.ReplyKeyboardMarkup(resize_keyboard=True)
         btn3 = types.KeyboardButton("Прямой")
         btn4 = types.KeyboardButton("Экскурсионный")
+        btnGuide = types.KeyboardButton("Пообщаться с гидом")
+        hideBoard.add(btnGuide)
         hideBoard.add(btn3, btn4)
         bot.send_message(message.chat.id, text="Выберите тип маршрута:", reply_markup=hideBoard)
     elif (message.text == "Пообщаться с гидом"):
@@ -69,6 +71,9 @@ def func(message):
                              message.from_user), reply_markup=markup)
     elif active_sessions[message.chat.id] == 1:
         s = str(message.text)
+        hideBoard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        btnGuide = types.KeyboardButton("Пообщаться с гидом")
+        hideBoard.add(btnGuide)
         try:
             s2 = list(map(str, s.split("->")))
             link = gis.getLink(s2[1:], s2[0])

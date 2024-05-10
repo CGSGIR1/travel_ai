@@ -5,6 +5,7 @@ keys = [
         "79552add-3a03-49bf-a5d0-0f9b33e92118",
         "90b9ccf1-33a7-4c35-accb-36225d1a2db6",
         "0b939a1e-92dd-48b2-bc18-32aeec793341",
+        "d6eac903-d3d2-45f0-8345-981f03a9c39a",
 ]
 getSights = f"https://catalog.api.2gis.com/3.0/items?"
 makeOpt = f"https://routing.api.2gis.com/logistics/vrp/1.1.0/create?key="
