@@ -1,5 +1,4 @@
 import telebot
-import os.path
 from telebot import types
 import gis, settings
 from testik import GptAnswer
@@ -7,10 +6,14 @@ from ModelLoad import GigachatStart, AIResponse
 from CreateEmbeddings import CreateEmbeddings
 import logging
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.ERROR)
 bot = telebot.TeleBot(settings.telebot_token)
 active_sessions = dict()
-CreateEmbeddings()
+CreateEmbeddings(
+    file_for_context=settings.path_to_file_for_embeddings,
+    model_name=settings.emmbedding_model_name
+)
+
 GigaChat, GigaRet = GigachatStart()
 logging.info("ГигаЧат загрузили")
 
@@ -34,6 +37,7 @@ def func(message):
         zashita = active_sessions[message.chat.id]
     except:
         active_sessions[message.chat.id] = 0
+
     if (message.text == "Построить маршрут"):
         hideBoard = types.ReplyKeyboardMarkup(resize_keyboard=True)
         btn3 = types.KeyboardButton("Прямой")
@@ -90,16 +94,21 @@ def func(message):
         try:
             s2 = list(map(str, s.split("->")))
             attractions = []
-            for i in range(1, len(s2)):
-                answer = AIResponse(s2[i], GigaChat, GigaRet)
-                attractions = attractions + gis.split(s2[i], answer)
-            link = gis.getLink(attractions, s2[0])
-            markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-            btnGuide = types.KeyboardButton("Пообщаться с гидом")
-            markup.add(btnGuide)
-            bot.send_message(message.chat.id,
-                             text=settings.makeLink(link), parse_mode="HTML", reply_markup=markup)
-            active_sessions[message.chat.id] = 0
+            answer = ''
+            #for i in range(1, len(s2)):
+            #answer = AIResponse(s2[i], GigaChat, GigaRet)
+            #    attractions = attractions + gis.split(s2[i], answer)
+
+            answer = AIResponse(s2[1],  GigaRet)
+            bot.send_message(message.chat.id, text=answer)
+            #bot.send_message(message.chat.id, text=answer)
+            #link = gis.getLink(attractions, s2[0])
+            #markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+            #btnGuide = types.KeyboardButton("Пообщаться с гидом")
+            #markup.add(btnGuide)
+            #bot.send_message(message.chat.id,
+            #                 text=settings.makeLink(link), parse_mode="HTML", reply_markup=markup)
+            #active_sessions[message.chat.id] = 0
             # markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
             # btnGuide = types.KeyboardButton("Узнать поподробнее об этих достопримечательностях")
             # markup.add(btnGuide)
