@@ -1,3 +1,9 @@
+import os
+
+emmbedding_model_name = "intfloat/multilingual-e5-base"
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+path_to_file_for_embeddings = os.path.join(ROOT_DIR, "DataBase", "res1.csv")
+FAISS_FOLDER = 'faiss_index'
 keys = [
         "62d0d797-2d57-416c-add8-4758500d9e5a",
         "c798f9b7-95e0-4228-ac87-9dff6cfd37d7",
