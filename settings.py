@@ -17,5 +17,18 @@ makeOpt = f"https://routing.api.2gis.com/logistics/vrp/1.1.0/create?key="
 getRoute = "https://routing.api.2gis.com/logistics/vrp/1.1.0/status?task_id="
 idf = "Y2I5NzU5ZTMtMTZhMy00YzhmLTgwODAtNTAwZWQ1ZGEwYzMzOjU0YmY4ZjQwLWI5NTgtNDJiNi1iZGVjLWRhODI5MTY5NWEzMg=="
 telebot_token = "7131622872:AAF1NpdTKCUExxmwt2_bC5VmOlyRxD6BpXA"
+
+url_giga_get_token = 'https://ngw.devices.sberbank.ru:9443/api/v2/oauth'
+payload = 'scope=GIGACHAT_API_PERS'
+model_params = {
+            "model": "GigaChat",
+            "temperature": 1,
+            "top_p": 0.1,
+            "n": 1,
+            "stream": False,
+            "max_tokens": 512,
+            "repetition_penalty": 1
+        }
+
 def makeLink(l):
         return f'<a href="{l}">Ссылка на 2гис</a>'

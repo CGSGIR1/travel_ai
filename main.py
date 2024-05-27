@@ -1,8 +1,7 @@
 import telebot
 from telebot import types
 import gis, settings
-from testik import GptAnswer
-from ModelLoad import GigachatStart, AIResponse
+from ModelLoad import ClassModelLoad
 from CreateEmbeddings import CreateEmbeddings
 import logging
 
@@ -14,7 +13,9 @@ CreateEmbeddings(
     model_name=settings.emmbedding_model_name
 )
 
-GigaChat, GigaRet = GigachatStart()
+modelLoad = ClassModelLoad()
+
+GigaChatLLM, GigaRet = modelLoad.GigachatStart()
 logging.info("ГигаЧат загрузили")
 
 @bot.message_handler(commands=['start'])
@@ -99,7 +100,7 @@ def func(message):
             #answer = AIResponse(s2[i], GigaChat, GigaRet)
             #    attractions = attractions + gis.split(s2[i], answer)
 
-            answer = AIResponse(s2[1],  GigaRet)
+            answer = modelLoad.AIResponse(s2[1], GigaChatLLM,  GigaRet)
             bot.send_message(message.chat.id, text=answer)
             #bot.send_message(message.chat.id, text=answer)
             #link = gis.getLink(attractions, s2[0])
@@ -123,7 +124,7 @@ def func(message):
     else:
         s = str(message.text)
         bot.send_message(message.chat.id,
-                         text=GptAnswer(s).format(
+                         text=modelLoad.GigachatMainGidAnswer(s).format(
                              message.from_user))
 
 
